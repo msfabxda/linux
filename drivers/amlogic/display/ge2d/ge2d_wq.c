@@ -1112,6 +1112,7 @@ int ge2d_wq_init(struct platform_device *pdev,
 
 	/* prepare bottom half */
 	spin_lock_init(&ge2d_manager.event.sem_lock);
+	spin_lock_init(&ge2d_manager.state_lock);
 	sema_init(&ge2d_manager.event.cmd_in_sem, 1);
 	init_waitqueue_head(&ge2d_manager.event.cmd_complete);
 	init_completion(&ge2d_manager.event.process_complete);
