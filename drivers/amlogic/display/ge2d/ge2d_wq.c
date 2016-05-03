@@ -1048,9 +1048,18 @@ int  destroy_ge2d_work_queue(struct ge2d_context_s *ge2d_work_queue)
 		spin_unlock(&ge2d_manager.event.sem_lock);
 		if ((ge2d_manager.current_wq == ge2d_work_queue) &&
 		    (ge2d_manager.ge2d_state == GE2D_STATE_RUNNING)) {
-			ge2d_manager.ge2d_state = GE2D_STATE_REMOVING_WQ;
-			wait_for_completion(
-				&ge2d_manager.event.process_complete);
+		    	
+		     // check again with lock
+		        int wasRunning = 0;
+		        spin_lock(&ge2d_manager.state_lock);
+		        if (ge2d_manager.ge2d_state== GE2D_STATE_RUNNING)
+		        {
+			  ge2d_manager.ge2d_state=GE2D_STATE_REMOVING_WQ;
+			  wasRunning = 1;
+			}
+			spin_unlock(&ge2d_manager.state_lock);
+			if (wasRunning)
+			    wait_for_completion(&ge2d_manager.event.process_complete);	
 			/* condition so complex ,simplify it . */
 			ge2d_manager.last_wq = NULL;
 		} /* else we can delete it safely. */
