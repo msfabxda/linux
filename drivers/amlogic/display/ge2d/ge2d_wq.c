@@ -258,8 +258,11 @@ static int ge2d_process_work_queue(struct ge2d_context_s *wq)
 	} while (pos != head);
 	ge2d_manager.last_wq = wq;
 exit:
+
+	spin_lock(&ge2d_manager.state_lock);
 	if (ge2d_manager.ge2d_state == GE2D_STATE_REMOVING_WQ)
-		complete(&ge2d_manager.event.process_complete);
+	 	complete(&ge2d_manager.event.process_complete);
+	spin_unlock(&ge2d_manager.state_lock);
 	ge2d_manager.ge2d_state = GE2D_STATE_IDLE;
 	return ret;
 }
