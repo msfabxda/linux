@@ -262,8 +262,9 @@ exit:
 	spin_lock(&ge2d_manager.state_lock);
 	if (ge2d_manager.ge2d_state == GE2D_STATE_REMOVING_WQ)
 	 	complete(&ge2d_manager.event.process_complete);
-	spin_unlock(&ge2d_manager.state_lock);
 	ge2d_manager.ge2d_state = GE2D_STATE_IDLE;
+	spin_unlock(&ge2d_manager.state_lock);
+
 	return ret;
 }
 
