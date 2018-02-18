@@ -114,6 +114,14 @@
 			alignment = <0x0 0x100000>;
                         //no-map;
 		};
+
+		jpegenc_cma_reserved:linux,jpegenc_cma {
+			compatible = "shared-dma-pool";
+			linux,phandle = <3>;
+			reusable;
+			size = <0x0 0x2400000>;
+			alignment = <0x0 0x400000>;
+		};
 	};
 
 	meson-vout {
@@ -198,6 +206,7 @@
                 interrupt-names = "macirq";
                 clocks = <&clock CLK_81>;
                 clock-names = "ethclk81";
+				max-frame-size = <3582>;
         };
 
 	mesonstream {
@@ -295,6 +304,16 @@
 		compatible = "amlogic, amvenc_avc";
 		//memory-region = <&amvenc_avc_reserved>;
 		dev_name = "amvenc_avc";
+		status = "okay";
+		interrupts = <0 45 1>;
+		interrupt-names = "mailbox_2";
+	};
+
+	jpegenc{
+		compatible = "amlogic, jpegenc";
+		//memory-region = <&jpegenc_reserved>;
+		memory-region = <&jpegenc_cma_reserved>;
+		dev_name = "jpegenc";
 		status = "okay";
 		interrupts = <0 45 1>;
 		interrupt-names = "mailbox_2";
